@@ -1,0 +1,12 @@
+---
+- hosts: all
+  
+  tasks:  
+  - name: roles/SW/common/initialize
+    include_role:
+      name: roles/SW/common
+      tasks_from: initialize.yml
+...
+
+
+  

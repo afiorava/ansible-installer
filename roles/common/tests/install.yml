@@ -1,0 +1,57 @@
+---
+- hosts: all
+  vars:
+    tibco_home: "{{ansible_env.HOME}}/sw/tibco"
+    tibco_config_home: "{{ansible_env.HOME}}/config"
+
+  tasks:  
+  - name: install with a 32 bit installer
+    include_role:
+      name: roles/SW/common
+      tasks_from: install.yml
+    vars:
+      archive_file: ../../../../SW/RV/TIB_rv_8.4.5_linux_x86.zip
+      silent_file: ../../../../SW/RV/TIB_rv_8.4.5_linux_x86.silent
+      installer_file_name: TIBCOUniversalInstaller-lnx-x86.bin
+
+  - name: install with LGPL_libs and bundled 64 bit installer
+    include_role:
+      name: roles/SW/common
+      tasks_from: install.yml
+    vars:
+      archive_file: ../../../../SW/APIX/TIB_api-exchange-gateway_2.3.0_linux26gl25_x86_64.zip
+      silent_file: ../../../../SW/APIX/TIB_api-exchange-gateway_2.3.0_linux26gl25_x86_64.silent
+      LGPL_libs: ['../../../../SW/APIX/product_tibco_be_eclipse_lgpl_4.4.1.001_linux_x86_64.zip']
+   
+  - name: install with a tpcl lib and remote 64 bit installer
+    include_role:
+      name: roles/SW/common
+      tasks_from: install.yml
+    vars:
+      archive_file: ../../../../SW/APIX/TIB_api-exchange-gateway_2.3.0_HF-005_linux26gl25_x86_64.zip
+      silent_file: ../../../../SW/APIX/TIB_api-exchange-gateway_2.3.0_HF-005_linux26gl25_x86_64.silent
+      installer_type: remote
+      installer_file_dir: ../../../../SW/APIX
+      LGPL_libs: ['../../../../SW/APIX/product_tibco_be_eclipse_lgpl_4.4.1.001_linux_x86_64.zip']
+      
+  - name: install with multiple tpcl libs  and bundled 64 bit installer
+    include_role:
+      name: roles/SW/common
+      tasks_from: install.yml
+    vars:
+      archive_file: ../../../../SW/BW6/TIB_BW_6.4.2_linux26gl23_x86_64.zip
+      silent_file: ../../../../SW/BW6/TIB_BW_6.4.2_linux26gl23_x86_64.silent
+      LGPL_libs: ['../../../../SW/BW6/product_tibco_eclipse_lgpl_4.4.1.001_linux26gl25_x86_64.zip','../../../../SW/BW6/product_tibco_sunec_1.8.0.121_linux_x86_64.zip']
+
+  - name: install with no tpcl libs and local 64 bit installer
+    include_role:
+      name: roles/SW/common
+      tasks_from: install.yml
+    vars:
+      archive_file: ../../../../SW/BW6/TIB_BW_6.4.2_HF-001.zip
+      silent_file: ../../../../SW/BW6/TIB_BW_6.4.2_HF-001.silent
+      installer_type: local
+...
+
+
+  

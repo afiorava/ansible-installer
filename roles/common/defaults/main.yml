@@ -1,0 +1,8 @@
+---
+tibco_home_name: "TIBCO_HOME"
+tibco_home_description: "TIBCO HOME"
+installer_file_name: TIBCOUniversalInstaller-lnx-x86-64.bin
+installer_type: bundled
+os_setenv_script: .bash_profile
+tmp_dir: "{{ansible_env.HOME}}/tmp"
+...

@@ -1,0 +1,85 @@
+---
+- name: debug SW/install
+  debug:
+    msg: installer={{archive_file}} - silent={{silent_file}} } - tibco_home={{tibco_home}} 
+    
+- name: debug tibco_config_home
+  debug:
+    var: tibco_config_home
+  when:
+   tibco_config_home is defined
+
+- name: debug LGPL_libs
+  debug:
+    var: LGPL_libs
+  when:
+   LGPL_libs is defined
+    
+- name: remove tmp_dir folder
+  file:
+    path: "{{tmp_dir}}"
+    state: absent
+
+- name: generate tmp paths for sw and libraries
+  set_fact:
+    sw_tmp_dir: "{{tmp_dir}}/sw"
+    LGPL_assembly_path: "{{tmp_dir}}/libs"
+
+- name: create sw_tmp_dir folder
+  file:
+    path: "{{tmp_dir}}/sw"
+    state: directory
+    
+- name: create libs_tmp_dir folder
+  file:
+    path: "{{tmp_dir}}/libs"
+    state: directory
+  when:
+    LGPL_libs is defined
+
+- name: upload and unarchive archive_file {{archive_file}}
+  unarchive: 
+    src: "{{archive_file}}"
+    dest: "{{sw_tmp_dir}}"
+      
+- name: configure and upload silent file
+  template:
+    src: "{{silent_file}}"
+    dest: "{{sw_tmp_dir}}"
+
+- name: copy LGPL libraries
+  copy:
+    src: "{{item}}"
+    dest: "{{LGPL_assembly_path}}"
+  with_items: "{{LGPL_libs}}"
+  when:
+    LGPL_libs is defined
+       
+- name: copy remote installer
+  copy:
+    src: "{{installer_file_dir}}/{{installer_file_name}}"
+    dest: "{{sw_tmp_dir}}"
+    force: no
+    mode: 0740
+  when:
+    installer_type=="remote"
+
+- name: copy local installer
+  copy:
+    src: "{{tibco_home}}/tools/universal_installer/{{installer_file_name}}"
+    dest: "{{sw_tmp_dir}}"
+    remote_src: yes
+    force: no 
+    mode: 0740
+  when:
+    installer_type=="local"
+
+- name: silent installation 
+  shell:
+    cd {{sw_tmp_dir}} && ./{{installer_file_name}} -silent -V responseFile={{ silent_file | basename }}
+    
+- name: remove tmp_dir folder 
+  file:
+    path: "{{tmp_dir}}"
+    state: absent
+...   

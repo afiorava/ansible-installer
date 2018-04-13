@@ -1,0 +1,13 @@
+---
+- hosts: all
+
+  tasks:  
+  - name: roles/SW/common/clean
+    include_role:
+      name: roles/SW/common
+      tasks_from: clean.yml
+      
+    vars:
+      tibco_home: "{{ansible_env.HOME}}/sw/tibco"
+      tibco_config_home: "{{ansible_env.HOME}}/config"
+...

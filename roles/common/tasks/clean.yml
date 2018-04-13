@@ -1,0 +1,54 @@
+---
+- name: debug tibco_home and tmp_dir
+  debug:
+    msg: tibco_home={{tibco_home}} - tmp_dir={{tmp_dir}}
+
+- name: debug tibco_config_home
+  debug:
+    var: tibco_config_home
+  when:
+   tibco_config_home is defined
+
+- name: confirm clean operation
+  pause: prompt='Please confirm you want to clean tibco installation. Press Ctrl+c and then "a" to abort'
+
+- name: delete tibco_home folder
+  file:
+    path: "{{tibco_home}}"
+    state: absent
+    recurse: no
+  
+- name: delete tibco_config_home folder
+  file:
+    path: "{{tibco_config_home}}"
+    state: absent
+    recurse: no
+  when:
+   tibco_config_home is defined
+    
+- name: delete tmp_dir folder
+  file:
+    path: "{{tmp_dir}}"
+    state: absent
+    recurse: no
+  
+- name: delete .TIBCO .TIBCOEnvInfo e InstallShield folder within user home
+  file:
+    path: "~/{{item}}"
+    state: absent
+  with_items:
+    - .TIBCO
+    - .TIBCOEnvInfo
+    - InstallShield
+    
+- name: delete tibco_setenv_script file
+  file:
+    path: "~/tibco_setenv.sh"
+    state: absent
+  
+- name: clean os_setenv_script script
+  lineinfile:
+      path: "{{os_setenv_script}}"
+      line: ". tibco_setenv.sh"
+      state: absent
+...

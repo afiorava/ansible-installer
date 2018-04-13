@@ -2,6 +2,6 @@
 - name: update os_setenv_script script
   lineinfile:
       path: "{{os_setenv_script}}"
-      line: ". tibco_setenv.sh"
+      line: ". {{tibco_setenv_script}}"
       state: present
 ...

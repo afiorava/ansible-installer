@@ -43,12 +43,12 @@
     
 - name: delete tibco_setenv_script file
   file:
-    path: "~/tibco_setenv.sh"
+    path: "{{tibco_setenv_script}}"
     state: absent
   
 - name: clean os_setenv_script script
   lineinfile:
       path: "{{os_setenv_script}}"
-      line: ". tibco_setenv.sh"
+      line: ". {{tibco_setenv_script}}"
       state: absent
 ...

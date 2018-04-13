@@ -8,23 +8,19 @@
     var: tibco_config_home
   when:
    tibco_config_home is defined
-   
-- name: delete logs_dir folder
-  file:
-    path: "{{logs_dir}}"
-    state: absent
-    recurse: no
+
+- name: debug logs_dir
+  debug:
+    var: logs_dir
   when:
    logs_dir is defined
-
-- name: delete scripts_dir folder
-  file:
-    path: "{{scripts_dir}}"
-    state: absent
-    recurse: no
+   
+- name: debug scripts_dir
+  debug:
+    var: scripts_dir
   when:
    scripts_dir is defined
-
+   
 - name: confirm clean operation
   pause: prompt='Please confirm you want to clean tibco installation. Press Ctrl+c and then "a" to abort'
 
@@ -67,4 +63,20 @@
       path: "{{os_setenv_script}}"
       line: ". {{tibco_setenv_script}}"
       state: absent
+      
+- name: delete logs_dir folder
+  file:
+    path: "{{logs_dir}}"
+    state: absent
+    recurse: no
+  when:
+   logs_dir is defined
+
+- name: delete scripts_dir folder
+  file:
+    path: "{{scripts_dir}}"
+    state: absent
+    recurse: no
+  when:
+   scripts_dir is defined
 ...

@@ -79,4 +79,5 @@
     recurse: no
   when:
    scripts_dir is defined
+   TEST
 ...
